@@ -1,0 +1,28 @@
+{
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "description": "Simple Tic-Tac-Toe console game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fedorov-A/Tic-Tac-Toe.git"
+  },
+  "author": "Alexey Fedorov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Fedorov-A/Tic-Tac-Toe/issues"
+  },
+  "homepage": "https://github.com/Fedorov-A/Tic-Tac-Toe#readme",
+  "dependencies": {
+    "cucumber": "^6.0.5",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1"
+  }
+}
