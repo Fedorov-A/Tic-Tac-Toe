@@ -4,7 +4,7 @@
   "description": "Simple Tic-Tac-Toe console game",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js"
+    "test": "cucumber-js ./cucumber/features -r ./cucumber/steps"
   },
   "repository": {
     "type": "git",
