@@ -1,11 +1,31 @@
 const { Given, When, Then } = require('cucumber');
+const { expect } = require('chai');
+const TicTacToe = require('../../tictactoe.js');
 
-Given('поле', (dataTable) => {
-  'pending';
+let game;
+
+Given('table', (dataTable) => {
+  game = new TicTacToe();
+  game.StartGame(dataTable.rawTable);
 });
-When('игрок ходит в клетку', (dataTable) => {
-  'pending';
+
+When('player 1 makes a step into cell {int}, {int}', (x, y) => {
+  game.SetCell(x, y);
 });
-Then('поле становится', (dataTable) => {
-  'pending';
+
+When('player 2 makes a step into cell {int}, {int}', (x, y) => {
+  game.SetCell(x, y);
+});
+
+Then('table becomes', (dataTable) => {
+  game.MakeStep();
+  expect(game.table.toString()).to.equal(dataTable.rawTable.toString());
+});
+
+Then('throw error', () => {
+  expect(game.MakeStep).to.throw(Error);
+});
+
+Then('show message {string}', (str) => {
+  expect(game.CheckWinners()).to.equal(str);
 });
