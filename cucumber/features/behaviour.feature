@@ -166,4 +166,4 @@ Feature: Tic-Tac-Toe
         | X | O | X |
         | X | O | X |
         | O | X | O |
-        And show message "There is no winner (yet)" 
+        And show message "There is no winner" 

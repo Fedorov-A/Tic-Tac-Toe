@@ -27,5 +27,6 @@ Then('throw error', () => {
 });
 
 Then('show message {string}', (str) => {
+  game.stepsNumber = 9;
   expect(game.CheckWinners()).to.equal(str);
 });
