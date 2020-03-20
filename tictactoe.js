@@ -3,6 +3,7 @@ function TicTacToe() {
   this.table = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']];
   this.x = 1;
   this.y = 1;
+  this.stepsNumber = 0;
   this.currentStep = 1;
 }
 
@@ -24,9 +25,11 @@ TicTacToe.prototype.MakeStep = function () {
   }
   if (this.currentStep === 1) {
     this.table[this.x][this.y] = 'X';
+    this.stepsNumber += 1;
     this.currentStep = 2;
   } else if (this.currentStep === 2) {
     this.table[this.x][this.y] = 'O';
+    this.stepsNumber += 1;
     this.currentStep = 1;
   }
 };
@@ -54,7 +57,17 @@ TicTacToe.prototype.CheckWinners = function () {
     }
   }
 
-  return 'There is no winner (yet)';
+  if (this.stepsNumber === 9) {
+    return 'There is no winner';
+  }
+
+  return '';
+};
+
+TicTacToe.prototype.ShowTable = function () {
+  console.log(this.table[0]);
+  console.log(this.table[1]);
+  console.log(this.table[2]);
 };
 
 module.exports = TicTacToe;
