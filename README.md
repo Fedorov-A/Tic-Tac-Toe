@@ -1,2 +1,2 @@
 # Tic-Tac-Toe
-Simple Tic-Tac-Toe console game
+Backend for Tic-Tac-Toe
