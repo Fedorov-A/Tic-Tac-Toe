@@ -14,19 +14,30 @@ TicTacToe.prototype.getTable = function getTable() {
 
 // Sets table
 TicTacToe.prototype.setTable = function setTable(table) {
+  this.resetGame();
   this.table = table;
+  // Calculation number of steps
+  for (let i = 0; i < 3; i += 1) {
+    for (let j = 0; j < 3; j += 1) {
+      if (this.table[i][j] !== '.') {
+        this.currentNumberOfSteps += 1;
+      }
+    }
+  }
+  return 'OK';
 };
 
 // Sets a cell for the next step
 TicTacToe.prototype.setCell = function setCell(x, y) {
   this.x = x;
   this.y = y;
+  return 'OK';
 };
 
 // Makes a step within choosen cell
 TicTacToe.prototype.makeStep = function makeStep() {
   if (this.table[this.x][this.y] !== '.') {
-    throw Error('Cell is not empty');
+    return 'Cell is not empty';
   }
   if (this.currentPlayer === 1) {
     this.table[this.x][this.y] = 'X';
@@ -37,6 +48,7 @@ TicTacToe.prototype.makeStep = function makeStep() {
     this.currentNumberOfSteps += 1;
     this.currentPlayer = 1;
   }
+  return this.table;
 };
 
 // Resets the game
