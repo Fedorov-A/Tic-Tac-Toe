@@ -1,40 +1,54 @@
 // Tic-Tac-Toe class
 function TicTacToe() {
   this.table = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']];
-  this.x = 1;
-  this.y = 1;
-  this.stepsNumber = 0;
-  this.currentStep = 1;
+  this.x = 0;
+  this.y = 0;
+  this.currentNumberOfSteps = 0;
+  this.currentPlayer = 1;
 }
 
-// Starts game within provided table
-TicTacToe.prototype.StartGame = function (table) {
+// Gets table
+TicTacToe.prototype.getTable = function getTable() {
+  return this.table;
+};
+
+// Sets table
+TicTacToe.prototype.setTable = function setTable(table) {
   this.table = table;
 };
 
 // Sets a cell for the next step
-TicTacToe.prototype.SetCell = function (x, y) {
+TicTacToe.prototype.setCell = function setCell(x, y) {
   this.x = x;
   this.y = y;
 };
 
-// Makes a step
-TicTacToe.prototype.MakeStep = function () {
+// Makes a step within choosen cell
+TicTacToe.prototype.makeStep = function makeStep() {
   if (this.table[this.x][this.y] !== '.') {
     throw Error('Cell is not empty');
   }
-  if (this.currentStep === 1) {
+  if (this.currentPlayer === 1) {
     this.table[this.x][this.y] = 'X';
-    this.stepsNumber += 1;
-    this.currentStep = 2;
-  } else if (this.currentStep === 2) {
+    this.currentNumberOfSteps += 1;
+    this.currentPlayer = 2;
+  } else if (this.currentPlayer === 2) {
     this.table[this.x][this.y] = 'O';
-    this.stepsNumber += 1;
-    this.currentStep = 1;
+    this.currentNumberOfSteps += 1;
+    this.currentPlayer = 1;
   }
 };
 
-TicTacToe.prototype.CheckWinners = function () {
+// Resets the game
+TicTacToe.prototype.resetGame = function resetGame() {
+  this.table = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']];
+  this.x = 0;
+  this.y = 0;
+  this.currentNumberOfSteps = 0;
+  this.currentPlayer = 1;
+};
+
+TicTacToe.prototype.checkWinner = function checkWinner() {
   if ((this.table[0][0] === this.table[1][1] && this.table[1][1] === this.table[2][2] && this.table[2][2] === 'X')
     || (this.table[0][2] === this.table[1][1] && this.table[1][1] === this.table[2][0] && this.table[2][0] === 'X')) {
     return 'Player 1 has won';
@@ -57,17 +71,11 @@ TicTacToe.prototype.CheckWinners = function () {
     }
   }
 
-  if (this.stepsNumber === 9) {
+  if (this.currentNumberOfSteps === 9) {
     return 'There is no winner';
   }
 
   return '';
-};
-
-TicTacToe.prototype.ShowTable = function () {
-  console.log(this.table[0]);
-  console.log(this.table[1]);
-  console.log(this.table[2]);
 };
 
 module.exports = TicTacToe;
