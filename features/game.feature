@@ -62,13 +62,19 @@ Feature: Tic-Tac-Toe
         |  |  |  |
         |  |  |  |
         When player 2 makes a step into cell 0, 0
-        Then throw error        
+        Then table becomes 
+        | 1 |  |  |
+        |  |  |  |
+        |  |  |  |
         Given table 
         | 1 | 2 |  |
         |  |  |  |
         |  |  |  |
         When player 1 makes a step into cell 0, 0
-        Then throw error        
+        Then table becomes
+        | 1 | 2 |  |
+        |  |  |  |
+        |  |  |  |
 
     Scenario: Check winner in columns
         Given table
