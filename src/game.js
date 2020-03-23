@@ -1,10 +1,15 @@
 // Tic-Tac-Toe class
 function TicTacToe() {
-  this.table = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']];
+  this.emptyCell = '';
+  this.firstPlayer = '1';
+  this.secondPlayer = '2';
   this.x = 0;
   this.y = 0;
   this.currentNumberOfSteps = 0;
   this.currentPlayer = 1;
+  this.table = [[this.emptyCell, this.emptyCell, this.emptyCell],
+    [this.emptyCell, this.emptyCell, this.emptyCell],
+    [this.emptyCell, this.emptyCell, this.emptyCell]];
 }
 
 // Gets table
@@ -19,7 +24,7 @@ TicTacToe.prototype.setTable = function setTable(table) {
   // Calculation number of steps
   for (let i = 0; i < 3; i += 1) {
     for (let j = 0; j < 3; j += 1) {
-      if (this.table[i][j] !== '.') {
+      if (this.table[i][j] !== this.emptyCell) {
         this.currentNumberOfSteps += 1;
       }
     }
@@ -36,15 +41,15 @@ TicTacToe.prototype.setCell = function setCell(x, y) {
 
 // Makes a step within choosen cell
 TicTacToe.prototype.makeStep = function makeStep() {
-  if (this.table[this.x][this.y] !== '.') {
+  if (this.table[this.x][this.y] !== this.emptyCell) {
     return 'Cell is not empty';
   }
   if (this.currentPlayer === 1) {
-    this.table[this.x][this.y] = 'X';
+    this.table[this.x][this.y] = this.firstPlayer;
     this.currentNumberOfSteps += 1;
     this.currentPlayer = 2;
   } else if (this.currentPlayer === 2) {
-    this.table[this.x][this.y] = 'O';
+    this.table[this.x][this.y] = this.secondPlayer;
     this.currentNumberOfSteps += 1;
     this.currentPlayer = 1;
   }
@@ -53,7 +58,9 @@ TicTacToe.prototype.makeStep = function makeStep() {
 
 // Resets the game
 TicTacToe.prototype.resetGame = function resetGame() {
-  this.table = [['.', '.', '.'], ['.', '.', '.'], ['.', '.', '.']];
+  this.table = [[this.emptyCell, this.emptyCell, this.emptyCell],
+    [this.emptyCell, this.emptyCell, this.emptyCell],
+    [this.emptyCell, this.emptyCell, this.emptyCell]];
   this.x = 0;
   this.y = 0;
   this.currentNumberOfSteps = 0;
@@ -61,24 +68,40 @@ TicTacToe.prototype.resetGame = function resetGame() {
 };
 
 TicTacToe.prototype.checkWinner = function checkWinner() {
-  if ((this.table[0][0] === this.table[1][1] && this.table[1][1] === this.table[2][2] && this.table[2][2] === 'X')
-    || (this.table[0][2] === this.table[1][1] && this.table[1][1] === this.table[2][0] && this.table[2][0] === 'X')) {
+  if ((this.table[0][0] === this.table[1][1]
+    && this.table[1][1] === this.table[2][2]
+    && this.table[2][2] === this.firstPlayer)
+    || (this.table[0][2] === this.table[1][1]
+      && this.table[1][1] === this.table[2][0]
+      && this.table[2][0] === this.firstPlayer)) {
     return 'Player 1 has won';
   }
   for (let i = 0; i < 3; i += 1) {
-    if ((this.table[i][0] === this.table[i][1] && this.table[i][1] === this.table[i][2] && this.table[i][2] === 'X')
-      || (this.table[0][i] === this.table[1][i] && this.table[1][i] === this.table[2][i] && this.table[2][i] === 'X')) {
+    if ((this.table[i][0] === this.table[i][1]
+      && this.table[i][1] === this.table[i][2]
+      && this.table[i][2] === this.firstPlayer)
+      || (this.table[0][i] === this.table[1][i]
+        && this.table[1][i] === this.table[2][i]
+        && this.table[2][i] === this.firstPlayer)) {
       return 'Player 1 has won';
     }
   }
 
-  if ((this.table[0][0] === this.table[1][1] && this.table[1][1] === this.table[2][2] && this.table[2][2] === 'O')
-    || (this.table[0][2] === this.table[1][1] && this.table[1][1] === this.table[2][0] && this.table[2][0] === 'O')) {
+  if ((this.table[0][0] === this.table[1][1]
+    && this.table[1][1] === this.table[2][2]
+    && this.table[2][2] === this.secondPlayer)
+    || (this.table[0][2] === this.table[1][1]
+      && this.table[1][1] === this.table[2][0]
+      && this.table[2][0] === this.secondPlayer)) {
     return 'Player 2 has won';
   }
   for (let i = 0; i < 3; i += 1) {
-    if ((this.table[i][0] === this.table[i][1] && this.table[i][1] === this.table[i][2] && this.table[i][2] === 'O')
-      || (this.table[0][i] === this.table[1][i] && this.table[1][i] === this.table[2][i] && this.table[2][i] === 'O')) {
+    if ((this.table[i][0] === this.table[i][1]
+      && this.table[i][1] === this.table[i][2]
+      && this.table[i][2] === this.secondPlayer)
+      || (this.table[0][i] === this.table[1][i]
+        && this.table[1][i] === this.table[2][i]
+        && this.table[2][i] === this.secondPlayer)) {
       return 'Player 2 has won';
     }
   }
