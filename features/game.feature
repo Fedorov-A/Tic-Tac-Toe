@@ -51,7 +51,7 @@ Feature: Tic-Tac-Toe
         | O | X | O |
         | X | O | X |
 
-    Scenario: Playes make a step into fill cell
+    Scenario: Players make a step into fill cell
         Given table
         | . | . | . |
         | . | . | . |
