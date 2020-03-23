@@ -11,12 +11,8 @@ router.post('/setTable', (req, res) => {
   res.status(200).send(game.setTable(req.body));
 });
 
-router.post('/setCell', (req, res) => {
-  res.status(200).send(game.setCell(req.body.x, req.body.y));
-});
-
 router.post('/makeStep', (req, res) => {
-  res.status(200).send(game.makeStep());
+  res.status(200).send(game.makeStep(req.body.x, req.body.y));
 });
 
 router.get('/checkWinner', (req, res) => {

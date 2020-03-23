@@ -3,13 +3,7 @@ function TicTacToe() {
   this.emptyCell = '';
   this.firstPlayer = '1';
   this.secondPlayer = '2';
-  this.x = 0;
-  this.y = 0;
-  this.currentNumberOfSteps = 0;
-  this.currentPlayer = 1;
-  this.table = [[this.emptyCell, this.emptyCell, this.emptyCell],
-    [this.emptyCell, this.emptyCell, this.emptyCell],
-    [this.emptyCell, this.emptyCell, this.emptyCell]];
+  this.resetGame();
 }
 
 // Gets table
@@ -32,39 +26,22 @@ TicTacToe.prototype.setTable = function setTable(table) {
   return 'OK';
 };
 
-// Sets a cell for the next step
-TicTacToe.prototype.setCell = function setCell(x, y) {
+// Makes a step within choosen cell
+TicTacToe.prototype.makeStep = function makeStep(x, y) {
   this.x = x;
   this.y = y;
+  if (this.table[this.x][this.y] === this.emptyCell) {
+    if (this.currentPlayer === 1) {
+      this.table[this.x][this.y] = this.firstPlayer;
+      this.currentNumberOfSteps += 1;
+      this.currentPlayer = 2;
+    } else if (this.currentPlayer === 2) {
+      this.table[this.x][this.y] = this.secondPlayer;
+      this.currentNumberOfSteps += 1;
+      this.currentPlayer = 1;
+    }
+  }
   return 'OK';
-};
-
-// Makes a step within choosen cell
-TicTacToe.prototype.makeStep = function makeStep() {
-  if (this.table[this.x][this.y] !== this.emptyCell) {
-    return 'Cell is not empty';
-  }
-  if (this.currentPlayer === 1) {
-    this.table[this.x][this.y] = this.firstPlayer;
-    this.currentNumberOfSteps += 1;
-    this.currentPlayer = 2;
-  } else if (this.currentPlayer === 2) {
-    this.table[this.x][this.y] = this.secondPlayer;
-    this.currentNumberOfSteps += 1;
-    this.currentPlayer = 1;
-  }
-  return this.table;
-};
-
-// Resets the game
-TicTacToe.prototype.resetGame = function resetGame() {
-  this.table = [[this.emptyCell, this.emptyCell, this.emptyCell],
-    [this.emptyCell, this.emptyCell, this.emptyCell],
-    [this.emptyCell, this.emptyCell, this.emptyCell]];
-  this.x = 0;
-  this.y = 0;
-  this.currentNumberOfSteps = 0;
-  this.currentPlayer = 1;
 };
 
 TicTacToe.prototype.checkWinner = function checkWinner() {
@@ -111,6 +88,17 @@ TicTacToe.prototype.checkWinner = function checkWinner() {
   }
 
   return '';
+};
+
+// Resets the game
+TicTacToe.prototype.resetGame = function resetGame() {
+  this.table = [[this.emptyCell, this.emptyCell, this.emptyCell],
+    [this.emptyCell, this.emptyCell, this.emptyCell],
+    [this.emptyCell, this.emptyCell, this.emptyCell]];
+  this.x = 0;
+  this.y = 0;
+  this.currentNumberOfSteps = 0;
+  this.currentPlayer = 1;
 };
 
 module.exports = TicTacToe;
