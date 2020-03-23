@@ -8,18 +8,19 @@ router.get('/getTable', (req, res) => {
 });
 
 router.post('/setTable', (req, res) => {
-  game.setTable(req.body);
-  res.status(200).send('OK');
+  res.status(200).send(game.setTable(req.body));
 });
 
 router.post('/setCell', (req, res) => {
-  game.setCell(req.body.x, req.body.y);
-  res.status(200).send('OK');
+  res.status(200).send(game.setCell(req.body.x, req.body.y));
 });
 
 router.post('/makeStep', (req, res) => {
-  game.makeStep();
-  res.status(200).send('OK');
+  res.status(200).send(game.makeStep());
+});
+
+router.get('/checkWinner', (req, res) => {
+  res.status(200).send(game.checkWinner());
 });
 
 module.exports = router;
