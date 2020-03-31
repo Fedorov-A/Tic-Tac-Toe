@@ -1,22 +1,27 @@
 const router = require('express').Router();
 const TicTacToe = require('./game');
+const users = require('./lib/users');
 
 const game = new TicTacToe();
 
-router.get('/getTable', (req, res) => {
+router.get('/getTable', users.authorizationRequired, (req, res) => {
   res.status(200).send(game.getTable());
 });
 
-router.post('/setTable', (req, res) => {
+router.post('/setTable', users.authorizationRequired, (req, res) => {
   res.status(200).send(game.setTable(req.body));
 });
 
-router.post('/makeStep', (req, res) => {
+router.post('/makeStep', users.authorizationRequired, (req, res) => {
   res.status(200).send(game.makeStep(req.body.x, req.body.y));
 });
 
-router.get('/checkWinner', (req, res) => {
+router.get('/checkWinner', users.authorizationRequired, (req, res) => {
   res.status(200).send(game.checkWinner());
+});
+
+router.post('/login', (req, res) => {
+  res.status(200).send(users.checkLogin(req.body.login, req.body.password));
 });
 
 module.exports = router;
