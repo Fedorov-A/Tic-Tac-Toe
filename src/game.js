@@ -1,8 +1,8 @@
 // Tic-Tac-Toe class
 function TicTacToe() {
   this.emptyCell = '';
-  this.firstPlayer = '1';
-  this.secondPlayer = '2';
+  this.player1 = '1';
+  this.player2 = '2';
   this.resetGame();
 }
 
@@ -32,11 +32,11 @@ TicTacToe.prototype.makeStep = function makeStep(x, y) {
   this.y = y;
   if (this.table[this.x][this.y] === this.emptyCell) {
     if (this.currentPlayer === 1) {
-      this.table[this.x][this.y] = this.firstPlayer;
+      this.table[this.x][this.y] = this.player1;
       this.currentNumberOfSteps += 1;
       this.currentPlayer = 2;
     } else if (this.currentPlayer === 2) {
-      this.table[this.x][this.y] = this.secondPlayer;
+      this.table[this.x][this.y] = this.player2;
       this.currentNumberOfSteps += 1;
       this.currentPlayer = 1;
     }
@@ -47,38 +47,38 @@ TicTacToe.prototype.makeStep = function makeStep(x, y) {
 TicTacToe.prototype.checkWinner = function checkWinner() {
   if ((this.table[0][0] === this.table[1][1]
     && this.table[1][1] === this.table[2][2]
-    && this.table[2][2] === this.firstPlayer)
+    && this.table[2][2] === this.player1)
     || (this.table[0][2] === this.table[1][1]
       && this.table[1][1] === this.table[2][0]
-      && this.table[2][0] === this.firstPlayer)) {
+      && this.table[2][0] === this.player1)) {
     return 'Player 1 has won';
   }
   for (let i = 0; i < 3; i += 1) {
     if ((this.table[i][0] === this.table[i][1]
       && this.table[i][1] === this.table[i][2]
-      && this.table[i][2] === this.firstPlayer)
+      && this.table[i][2] === this.player1)
       || (this.table[0][i] === this.table[1][i]
         && this.table[1][i] === this.table[2][i]
-        && this.table[2][i] === this.firstPlayer)) {
+        && this.table[2][i] === this.player1)) {
       return 'Player 1 has won';
     }
   }
 
   if ((this.table[0][0] === this.table[1][1]
     && this.table[1][1] === this.table[2][2]
-    && this.table[2][2] === this.secondPlayer)
+    && this.table[2][2] === this.player2)
     || (this.table[0][2] === this.table[1][1]
       && this.table[1][1] === this.table[2][0]
-      && this.table[2][0] === this.secondPlayer)) {
+      && this.table[2][0] === this.player2)) {
     return 'Player 2 has won';
   }
   for (let i = 0; i < 3; i += 1) {
     if ((this.table[i][0] === this.table[i][1]
       && this.table[i][1] === this.table[i][2]
-      && this.table[i][2] === this.secondPlayer)
+      && this.table[i][2] === this.player2)
       || (this.table[0][i] === this.table[1][i]
         && this.table[1][i] === this.table[2][i]
-        && this.table[2][i] === this.secondPlayer)) {
+        && this.table[2][i] === this.player2)) {
       return 'Player 2 has won';
     }
   }
