@@ -28,15 +28,13 @@ TicTacToe.prototype.setTable = function setTable(table) {
 
 // Makes a step within choosen cell
 TicTacToe.prototype.makeStep = function makeStep(x, y) {
-  this.x = x;
-  this.y = y;
-  if (this.table[this.x][this.y] === this.emptyCell) {
+  if (this.table[x][y] === this.emptyCell) {
     if (this.currentPlayer === 1) {
-      this.table[this.x][this.y] = this.player1;
+      this.table[x][y] = this.player1;
       this.currentNumberOfSteps += 1;
       this.currentPlayer = 2;
     } else if (this.currentPlayer === 2) {
-      this.table[this.x][this.y] = this.player2;
+      this.table[x][y] = this.player2;
       this.currentNumberOfSteps += 1;
       this.currentPlayer = 1;
     }
@@ -95,8 +93,6 @@ TicTacToe.prototype.resetGame = function resetGame() {
   this.table = [[this.emptyCell, this.emptyCell, this.emptyCell],
     [this.emptyCell, this.emptyCell, this.emptyCell],
     [this.emptyCell, this.emptyCell, this.emptyCell]];
-  this.x = 0;
-  this.y = 0;
   this.currentNumberOfSteps = 0;
   this.currentPlayer = 1;
 };

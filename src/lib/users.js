@@ -1,43 +1,81 @@
 const uuid = require('uuid');
+const Game = require('../game');
 
-const sessions = {};
+const sessions = [];
+
+const games = [];
 
 const users = [
   {
-    id: 1,
-    login: 'user1',
+    uuid: 'c86f5c90-9cdb-4633-b6a6-6b21b39e459c',
+    username: 'user1',
     password: 'password1',
   },
   {
-    id: 2,
-    login: 'user2',
+    uuid: '718cb90b-dbcb-407f-9690-7ad02affbec1',
+    username: 'user2',
     password: 'password2',
   },
 ];
 
-function checkLogin(login, password) {
-  let sessionId = '-1';
-  const user = users.find((el) => el.login === login && el.password === password);
+function signIn(login, password) {
+  const user = users.find((el) => el.username === login);
   if (user) {
-    sessionId = uuid.v4();
-    sessions[sessionId] = {
-      id: user.id,
-    };
+    return { status: 400, message: 'Username is already taken.' };
+  }
+  users.push({
+    uuid: uuid.v4(),
+    username: login,
+    password,
+  });
+  return { status: 200, message: 'Success' };
+}
+
+function logIn(username, password) {
+  const user = users.find((el) => el.username === username && el.password === password);
+
+  if (!user) {
+    return { status: 400, message: 'Unknown username or wrong password.' };
   }
 
-  return { id: sessionId };
+  const session = sessions.find((el) => el.userUuid === user.uuid);
+
+  let sessionUuid;
+
+  if (session) {
+    sessionUuid = session.sessionUuid;
+  } else {
+    sessionUuid = uuid.v4();
+    sessions.push({
+      userUuid: user.uuid,
+      sessionUuid,
+    });
+  }
+
+  return { status: 200, message: sessionUuid };
 }
 
-function checkSession(sessionId) {
-  return sessions[sessionId];
+function createNewGame(sessionUuid) {
+  const session = sessions.find((el) => el.sessionUuid === sessionUuid);
+  games.push({
+    userUuid: session.userUuid,
+    game: new Game(),
+  });
+  console.log(games);
 }
 
-function authorization(req, res, next) {
-  req.userCredentials = checkSession(req.headers.authorization);
+function getGames(sessionUuid) {
+  const session = sessions.find((el) => el.sessionUuid === sessionUuid);
+  const userGames = games.filter((el) => el.userUuid === session.userUuid);
+  return { status: 200, userGames };
+}
+
+function authentication(req, res, next) {
+  req.userCredentials = sessions.find((el) => el.sessionUuid === req.headers.authorization);
   next();
 }
 
-function authorizationRequired(req, res, next) {
+function authorization(req, res, next) {
   if (req.userCredentials) {
     next();
   } else {
@@ -46,8 +84,10 @@ function authorizationRequired(req, res, next) {
 }
 
 module.exports = {
-  checkLogin,
-  checkSession,
+  signIn,
+  logIn,
+  createNewGame,
+  getGames,
+  authentication,
   authorization,
-  authorizationRequired,
 };

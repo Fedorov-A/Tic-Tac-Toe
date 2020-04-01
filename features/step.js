@@ -1,7 +1,31 @@
 const { Given, When, Then } = require('cucumber');
+const assert = require('assert');
 const request = require('supertest');
 
 const app = require('../src/server');
+
+let actualResponse;
+let sessionUuid;
+
+When('user tries to sign in with followed {string} and {string}', (username, password) => request(app)
+  .post('/signIn')
+  .send({ username, password })
+  .then((res) => { actualResponse = res.status; }));
+
+When('user tries to log in with followed {string} and {string}', (username, password) => request(app)
+  .post('/logIn')
+  .send({ username, password })
+  .then((res) => { actualResponse = res.status; sessionUuid = res.text; }));
+
+When('user creates a new game', () => request(app)
+  .post('/createNewGame')
+  .set('Authorization', sessionUuid)
+  .send()
+  .then((res) => { actualResponse = res.status; }));
+
+Then('user gets {int}', (expectedResponse) => {
+  assert.equal(actualResponse, expectedResponse);
+});
 
 Then('table becomes', (dataTable) => request(app)
   .get('/getTable')
