@@ -5,6 +5,8 @@ const sessions = [];
 
 const games = [];
 
+const activeGames = [];
+
 const users = [
   {
     uuid: 'c86f5c90-9cdb-4633-b6a6-6b21b39e459c',
@@ -18,17 +20,21 @@ const users = [
   },
 ];
 
-function signIn(login, password) {
-  const user = users.find((el) => el.username === login);
+function signIn(username, password) {
+  if (!username || !password) {
+    return { status: 400, message: 'Incorrect username or password.' };
+  }
+
+  const user = users.find((el) => el.username === username);
   if (user) {
     return { status: 400, message: 'Username is already taken.' };
   }
   users.push({
     uuid: uuid.v4(),
-    username: login,
+    username,
     password,
   });
-  return { status: 200, message: 'Success' };
+  return { status: 200, message: 'Success.' };
 }
 
 function logIn(username, password) {
@@ -43,12 +49,12 @@ function logIn(username, password) {
   let sessionUuid;
 
   if (session) {
-    sessionUuid = session.sessionUuid;
+    sessionUuid = session.uuid;
   } else {
     sessionUuid = uuid.v4();
     sessions.push({
+      uuid: sessionUuid,
       userUuid: user.uuid,
-      sessionUuid,
     });
   }
 
@@ -56,22 +62,94 @@ function logIn(username, password) {
 }
 
 function createNewGame(sessionUuid) {
-  const session = sessions.find((el) => el.sessionUuid === sessionUuid);
-  games.push({
-    userUuid: session.userUuid,
-    game: new Game(),
-  });
-  console.log(games);
+  const session = sessions.find((el) => el.uuid === sessionUuid);
+  if (!session) {
+    return { status: 400, message: 'Unknown session.' };
+  }
+
+  const game = new Game();
+
+  games.push(game);
+
+  return { status: 200, message: game.uuid };
 }
 
-function getGames(sessionUuid) {
-  const session = sessions.find((el) => el.sessionUuid === sessionUuid);
-  const userGames = games.filter((el) => el.userUuid === session.userUuid);
-  return { status: 200, userGames };
+function getGames() {
+  return { status: 200, games };
 }
+
+function connectToGame(gameUuid, sessionUuid) {
+  const session = sessions.find((el) => el.uuid === sessionUuid);
+  const user = users.find((el) => el.uuid === session.userUuid);
+
+  let connectionError = false;
+
+  games.forEach((el) => {
+    if (el.uuid === gameUuid) {
+      if (el.player1Uuid === '') {
+        el.setPlayer1Uuid(user.uuid);
+      } else if (el.player2Uuid === '') {
+        el.setPlayer2Uuid(user.uuid);
+      } else {
+        connectionError = true;
+      }
+    }
+  });
+
+  if (connectionError) {
+    return { status: 400, message: 'Can\'t connect to this game.' };
+  }
+
+  activeGames[session.uuid] = gameUuid;
+
+  return { status: 200, message: 'Connection successfull.' };
+}
+
+function getGameStatus(gameUuid) {
+  const game = games.find((el) => el.uuid === gameUuid);
+
+  if (!game) {
+    return { status: 400, message: 'Can\'t get status of this game.' };
+  }
+
+  return { status: 200, message: game.getTable() };
+}
+
+function getActiveGameStatus(sessionUuid) {
+  const session = sessions.find((el) => el.uuid === sessionUuid);
+  const activeGame = activeGames[session.uuid];
+  const game = games.find((el) => el.uuid === activeGame.gameUuid);
+
+  if (!game) {
+    return { status: 400, message: 'Can\'t get status of this game.' };
+  }
+
+  return { status: 200, message: game.getTable() };
+}
+
+function makeStep(sessionUuid, x, y) {
+  const activeGameUuid = activeGames[sessionUuid];
+  const game = games.find((el) => el.uuid === activeGameUuid);
+
+  if (!game) {
+    return { status: 400, message: 'There is no active games.' };
+  }
+
+  const session = sessions.find((el) => el.uuid === sessionUuid);
+  const user = users.find((el) => el.uuid === session.userUuid);
+
+  const message = game.userCanMakeStep(user.uuid, x, y);
+  if (message) {
+    return { status: 400, message };
+  }
+
+  return { status: 200, message: game.makeStep(x, y) };
+}
+
+// #region Middlewares
 
 function authentication(req, res, next) {
-  req.userCredentials = sessions.find((el) => el.sessionUuid === req.headers.authorization);
+  req.userCredentials = sessions.find((el) => el.uuid === req.headers.authorization);
   next();
 }
 
@@ -79,15 +157,21 @@ function authorization(req, res, next) {
   if (req.userCredentials) {
     next();
   } else {
-    res.send(401);
+    res.sendStatus(401);
   }
 }
+
+// #endregion
 
 module.exports = {
   signIn,
   logIn,
   createNewGame,
   getGames,
+  connectToGame,
+  getGameStatus,
+  getActiveGameStatus,
+  makeStep,
   authentication,
   authorization,
 };

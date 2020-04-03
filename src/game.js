@@ -1,10 +1,32 @@
-// Tic-Tac-Toe class
+const uuid = require('uuid');
+
 function TicTacToe() {
+  // empty cell symbol
   this.emptyCell = '';
+  // player 1 symbol
   this.player1 = '1';
+  // player 2 symbol
   this.player2 = '2';
+  this.player1Uuid = '';
+  this.player2Uuid = '';
+  this.uuid = uuid.v4();
+  this.currentPlayer = this.player1Uuid;
   this.resetGame();
 }
+
+TicTacToe.prototype.setPlayer1Uuid = function setPlayer1Uuid(player1Uuid) {
+  this.player1Uuid = player1Uuid;
+  if (this.currentPlayer === '') {
+    this.currentPlayer = this.player1Uuid;
+  }
+};
+
+TicTacToe.prototype.setPlayer2Uuid = function setPlayer1Uuid(player2Uuid) {
+  this.player2Uuid = player2Uuid;
+  if (this.currentPlayer === '') {
+    this.currentPlayer = this.player2Uuid;
+  }
+};
 
 // Gets table
 TicTacToe.prototype.getTable = function getTable() {
@@ -28,18 +50,31 @@ TicTacToe.prototype.setTable = function setTable(table) {
 
 // Makes a step within choosen cell
 TicTacToe.prototype.makeStep = function makeStep(x, y) {
-  if (this.table[x][y] === this.emptyCell) {
-    if (this.currentPlayer === 1) {
-      this.table[x][y] = this.player1;
-      this.currentNumberOfSteps += 1;
-      this.currentPlayer = 2;
-    } else if (this.currentPlayer === 2) {
-      this.table[x][y] = this.player2;
-      this.currentNumberOfSteps += 1;
-      this.currentPlayer = 1;
-    }
+  if (this.currentPlayer === this.player1Uuid) {
+    this.table[x][y] = this.player1;
+    this.currentNumberOfSteps += 1;
+    this.currentPlayer = this.player2Uuid;
+  } else if (this.currentPlayer === this.player2Uuid) {
+    this.table[x][y] = this.player2;
+    this.currentNumberOfSteps += 1;
+    this.currentPlayer = this.player1Uuid;
   }
-  return 'OK';
+
+  return this.checkWinner();
+};
+
+TicTacToe.prototype.userCanMakeStep = function userCanMakeStep(userUuid, x, y) {
+  let message;
+
+  if (this.currentPlayer !== userUuid) {
+    message = 'It\'s not your turn.';
+  }
+
+  if (this.table[x][y] !== this.emptyCell) {
+    message = 'Cell is not empty.';
+  }
+
+  return message;
 };
 
 TicTacToe.prototype.checkWinner = function checkWinner() {
@@ -85,7 +120,7 @@ TicTacToe.prototype.checkWinner = function checkWinner() {
     return 'There is no winner';
   }
 
-  return '';
+  return 'OK';
 };
 
 // Resets the game
@@ -94,7 +129,7 @@ TicTacToe.prototype.resetGame = function resetGame() {
     [this.emptyCell, this.emptyCell, this.emptyCell],
     [this.emptyCell, this.emptyCell, this.emptyCell]];
   this.currentNumberOfSteps = 0;
-  this.currentPlayer = 1;
+  this.currentPlayer = this.player1Uuid;
 };
 
 module.exports = TicTacToe;

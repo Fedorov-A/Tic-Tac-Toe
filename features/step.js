@@ -1,4 +1,4 @@
-const { Given, When, Then } = require('cucumber');
+const { When, Then } = require('cucumber');
 const assert = require('assert');
 const request = require('supertest');
 
@@ -6,47 +6,59 @@ const app = require('../src/server');
 
 let actualResponse;
 let sessionUuid;
+let gameUuid;
+let actualGameStatus;
+let actualWinner;
 
-When('user tries to sign in with followed {string} and {string}', (username, password) => request(app)
+When('user tries to sign in with followed username {string} and password {string}', (username, password) => request(app)
   .post('/signIn')
   .send({ username, password })
   .then((res) => { actualResponse = res.status; }));
 
-When('user tries to log in with followed {string} and {string}', (username, password) => request(app)
+When('user tries to log in with followed username {string} and password {string}', (username, password) => request(app)
   .post('/logIn')
   .send({ username, password })
   .then((res) => { actualResponse = res.status; sessionUuid = res.text; }));
 
-When('user creates a new game', () => request(app)
-  .post('/createNewGame')
+When('user tries to create a new game', () => request(app)
+  .get('/createNewGame')
+  .set('Authorization', sessionUuid)
+  .send()
+  .then((res) => { actualResponse = res.status; gameUuid = res.text; }));
+
+When('user tries to get a list of games', () => request(app)
+  .get('/getGames')
   .set('Authorization', sessionUuid)
   .send()
   .then((res) => { actualResponse = res.status; }));
 
-Then('user gets {int}', (expectedResponse) => {
+When('user tries to connect to that new game', () => request(app)
+  .post('/connectToGame')
+  .set('Authorization', sessionUuid)
+  .send({ gameUuid })
+  .then((res) => { actualResponse = res.status; }));
+
+When('user tries to get game status', () => request(app)
+  .post('/getGameStatus')
+  .set('Authorization', sessionUuid)
+  .send({ gameUuid })
+  .then((res) => { actualResponse = res.status; actualGameStatus = res.body; }));
+
+When('user tries to make a step [{int}, {int}]', (x, y) => request(app)
+  .post('/makeStep')
+  .set('Authorization', sessionUuid)
+  .send({ x, y })
+  .then((res) => { actualResponse = res.status; actualWinner = res.text; }));
+
+Then('user gets response {int}', (expectedResponse) => {
   assert.equal(actualResponse, expectedResponse);
 });
 
-Then('table becomes', (dataTable) => request(app)
-  .get('/getTable')
-  .send()
-  .expect(200, dataTable.rawTable));
+Then('user gets table [[{string},{string},{string}],[{string},{string},{string}],[{string},{string},{string}]]', (str1, str2, str3, str4, str5, str6, str7, str8, str9) => {
+  const expectedGameStatus = [[str1, str2, str3], [str4, str5, str6], [str7, str8, str9]];
+  assert.equal(actualGameStatus.toString(), expectedGameStatus.toString());
+});
 
-Given('table', (dataTable) => request(app)
-  .post('/setTable')
-  .send(dataTable.rawTable)
-  .expect(200, 'OK'));
-
-When('player 1 makes a step into cell {int}, {int}', (x, y) => request(app)
-  .post('/makeStep')
-  .send({ x, y })
-  .expect(200, 'OK'));
-
-When('player 2 makes a step into cell {int}, {int}', (x, y) => request(app)
-  .post('/makeStep')
-  .send({ x, y })
-  .expect(200, 'OK'));
-
-Then('show message {string}', (str) => request(app)
-  .get('/checkWinner')
-  .expect(200, str));
+Then('show message {string}', (expectedWinner) => {
+  assert.equal(actualWinner, expectedWinner);
+});

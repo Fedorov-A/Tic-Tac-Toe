@@ -1,8 +1,5 @@
 const router = require('express').Router();
-const TicTacToe = require('./game');
 const users = require('./lib/users');
-
-const game = new TicTacToe();
 
 router.post('/signIn', (req, res) => {
   const response = users.signIn(req.body.username, req.body.password);
@@ -14,26 +11,29 @@ router.post('/logIn', (req, res) => {
   res.status(response.status).send(response.message);
 });
 
-router.post('/createNewGame', users.authorization, (req, res) => {
-  users.createNewGame(req.headers.authorization);
-  res.status(200).send();
+router.get('/createNewGame', users.authorization, (req, res) => {
+  const response = users.createNewGame(req.headers.authorization);
+  res.status(response.status).send(response.message);
 });
 
-router.get('/getTable', users.authorization, (req, res) => {
-  res.status(200).send(game.getTable());
+router.get('/getGames', users.authorization, (req, res) => {
+  const response = users.getGames();
+  res.status(response.status).send(response.games);
 });
 
-router.post('/setTable', users.authorization, (req, res) => {
-  res.status(200).send(game.setTable(req.body));
+router.post('/connectToGame', users.authorization, (req, res) => {
+  const response = users.connectToGame(req.body.gameUuid, req.headers.authorization);
+  res.status(response.status).send(response.message);
+});
+
+router.post('/getGameStatus', users.authorization, (req, res) => {
+  const response = users.getGameStatus(req.body.gameUuid);
+  res.status(response.status).send(response.message);
 });
 
 router.post('/makeStep', users.authorization, (req, res) => {
-  res.status(200).send(game.makeStep(req.body.x, req.body.y));
+  const response = users.makeStep(req.headers.authorization, req.body.x, req.body.y);
+  res.status(response.status).send(response.message);
 });
-
-router.get('/checkWinner', users.authorization, (req, res) => {
-  res.status(200).send(game.checkWinner());
-});
-
 
 module.exports = router;
