@@ -1,5 +1,5 @@
 # Tic-Tac-Toe
-Backend for Tic-Tac-Toe
+Backend for Tic-Tac-Toe game
 
 ## API
 
