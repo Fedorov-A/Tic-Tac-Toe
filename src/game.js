@@ -9,20 +9,24 @@ function TicTacToe() {
   this.player2 = '2';
   this.player1Uuid = '';
   this.player2Uuid = '';
+  this.player1Username = '';
+  this.player2Username = '';
   this.uuid = uuid.v4();
   this.currentPlayer = this.player1Uuid;
   this.resetGame();
 }
 
-TicTacToe.prototype.setPlayer1Uuid = function setPlayer1Uuid(player1Uuid) {
-  this.player1Uuid = player1Uuid;
+TicTacToe.prototype.setPlayer1 = function setPlayer1(playerUuid, username) {
+  this.player1Uuid = playerUuid;
+  this.player1Username = username;
   if (this.currentPlayer === '') {
     this.currentPlayer = this.player1Uuid;
   }
 };
 
-TicTacToe.prototype.setPlayer2Uuid = function setPlayer1Uuid(player2Uuid) {
-  this.player2Uuid = player2Uuid;
+TicTacToe.prototype.setPlayer2 = function setPlayer2(playerUuid, username) {
+  this.player2Uuid = playerUuid;
+  this.player2Username = username;
   if (this.currentPlayer === '') {
     this.currentPlayer = this.player2Uuid;
   }

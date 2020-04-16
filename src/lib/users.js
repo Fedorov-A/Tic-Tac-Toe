@@ -82,22 +82,30 @@ function connectToGame(gameUuid, sessionUuid) {
   const session = sessions.find((el) => el.uuid === sessionUuid);
   const user = users.find((el) => el.uuid === session.userUuid);
 
-  let connectionError = false;
+  let message;
 
   games.forEach((el) => {
     if (el.uuid === gameUuid) {
       if (el.player1Uuid === '') {
-        el.setPlayer1Uuid(user.uuid);
+        if (el.player2Uuid !== user.uuid) {
+          el.setPlayer1(user.uuid, user.username);
+        } else {
+          message = 'You have already connected to this game.';
+        }
       } else if (el.player2Uuid === '') {
-        el.setPlayer2Uuid(user.uuid);
+        if (el.player1Uuid !== user.uuid) {
+          el.setPlayer2(user.uuid, user.username);
+        } else {
+          message = 'You have already connected to this game.';
+        }
       } else {
-        connectionError = true;
+        message = 'Can\'t connect to this game.';
       }
     }
   });
 
-  if (connectionError) {
-    return { status: 400, message: 'Can\'t connect to this game.' };
+  if (message) {
+    return { status: 400, message };
   }
 
   activeGames[session.uuid] = gameUuid;
