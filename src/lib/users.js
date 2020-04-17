@@ -89,16 +89,12 @@ function connectToGame(gameUuid, sessionUuid) {
       if (el.player1Uuid === '') {
         if (el.player2Uuid !== user.uuid) {
           el.setPlayer1(user.uuid, user.username);
-        } else {
-          message = 'You have already connected to this game.';
         }
       } else if (el.player2Uuid === '') {
         if (el.player1Uuid !== user.uuid) {
           el.setPlayer2(user.uuid, user.username);
-        } else {
-          message = 'You have already connected to this game.';
         }
-      } else {
+      } else if (el.player1Uuid !== user.uuid && el.player2Uuid !== user.uuid) {
         message = 'Can\'t connect to this game.';
       }
     }
