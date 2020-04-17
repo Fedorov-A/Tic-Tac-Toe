@@ -13,6 +13,7 @@ function TicTacToe() {
   this.player2Username = '';
   this.uuid = uuid.v4();
   this.currentPlayer = this.player1Uuid;
+  this.gameHasFinished = false;
   this.resetGame();
 }
 
@@ -68,17 +69,19 @@ TicTacToe.prototype.makeStep = function makeStep(x, y) {
 };
 
 TicTacToe.prototype.userCanMakeStep = function userCanMakeStep(userUuid, x, y) {
-  let message;
+  if (this.gameHasFinished) {
+    return `Game over. ${this.checkWinner()}`;
+  }
 
   if (this.currentPlayer !== userUuid) {
-    message = 'It\'s not your turn.';
+    return 'It\'s not your turn.';
   }
 
   if (this.table[x][y] !== this.emptyCell) {
-    message = 'Cell is not empty.';
+    return 'Cell is not empty.';
   }
 
-  return message;
+  return '';
 };
 
 TicTacToe.prototype.checkWinner = function checkWinner() {
@@ -88,7 +91,8 @@ TicTacToe.prototype.checkWinner = function checkWinner() {
     || (this.table[0][2] === this.table[1][1]
       && this.table[1][1] === this.table[2][0]
       && this.table[2][0] === this.player1)) {
-    return 'Player 1 has won';
+    this.gameHasFinished = true;
+    return `Player 1 (${this.player1Username}) has won.`;
   }
   for (let i = 0; i < 3; i += 1) {
     if ((this.table[i][0] === this.table[i][1]
@@ -97,7 +101,8 @@ TicTacToe.prototype.checkWinner = function checkWinner() {
       || (this.table[0][i] === this.table[1][i]
         && this.table[1][i] === this.table[2][i]
         && this.table[2][i] === this.player1)) {
-      return 'Player 1 has won';
+      this.gameHasFinished = true;
+      return `Player 1 (${this.player1Username}) has won.`;
     }
   }
 
@@ -107,7 +112,8 @@ TicTacToe.prototype.checkWinner = function checkWinner() {
     || (this.table[0][2] === this.table[1][1]
       && this.table[1][1] === this.table[2][0]
       && this.table[2][0] === this.player2)) {
-    return 'Player 2 has won';
+    this.gameHasFinished = true;
+    return `Player 2 (${this.player2Username}) has won.`;
   }
   for (let i = 0; i < 3; i += 1) {
     if ((this.table[i][0] === this.table[i][1]
@@ -116,12 +122,14 @@ TicTacToe.prototype.checkWinner = function checkWinner() {
       || (this.table[0][i] === this.table[1][i]
         && this.table[1][i] === this.table[2][i]
         && this.table[2][i] === this.player2)) {
-      return 'Player 2 has won';
+      this.gameHasFinished = true;
+      return `Player 2(${this.player2Username}) has won.`;
     }
   }
 
   if (this.currentNumberOfSteps === 9) {
-    return 'There is no winner';
+    this.gameHasFinished = true;
+    return 'There is no winner.';
   }
 
   return 'OK';

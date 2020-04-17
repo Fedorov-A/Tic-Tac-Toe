@@ -193,7 +193,7 @@ Feature: API
         And user tries to make a step [2, 0]
         And user tries to get game status
         Then user gets table [["1","2",""],["1","2",""],["1","",""]]
-        Then show message 'Player 1 has won'
+        Then show message 'Player 1 (user3) has won.'
 
     # user2 wins (diagonal)
     Scenario: Two users play a game 2
@@ -215,7 +215,7 @@ Feature: API
         And user tries to make a step [2, 2]
         And user tries to get game status
         Then user gets table [["2","",""],["1","2",""],["1","1","2"]]
-        Then show message 'Player 2 has won'
+        Then show message 'Player 2 (user2) has won.'
     
     # user3 wins (horizontal)
     Scenario: Two users play a game 3
@@ -235,4 +235,4 @@ Feature: API
         And user tries to make a step [0, 2]
         And user tries to get game status
         Then user gets table [["1","1","1"],["","2","2"],["","",""]]
-        Then show message 'Player 1 has won'
+        Then show message 'Player 1 (user3) has won.'
