@@ -1,0 +1,84 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.root {
+  display: flex;
+}
+
+.header {
+  font-size: large;
+  font-weight: bold;
+}
+
+label {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.active-game-header {
+  font-weight: bold;
+  color: green;
+}
+
+.inactive-game-header {
+  font-weight: bold;
+  color: dimgrey;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-grow: 1;
+}
+
+.horizontal {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cell {
+  margin: 2px;
+  border: 1px solid gray;
+  width: 25px;
+  height: 25px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  width: 100px;
+  margin: 2px;
+}
+
+.game {
+  display: flex;
+  align-items: space-around;
+}

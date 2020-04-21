@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      TicTacToe
+    </title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="http://localhost:2000/socket.io/socket.io.js"></script>
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app" class="app">
+      <div class="root">
+        <div class="left-side">
+          <label class="header">Authentication</label>
+          <auth  
+            @update-username="setUsername" :username="username"
+            @update-password="setPassword" :password="password" 
+            @update-session-uuid="setSessionUuid" @update-response="setResponse"></auth>  
+        </div>
+        <div class="center">
+          <label class="header">Active game</label>
+          <div class="row" v-for="(row, x) in field" :key="row.id">
+            <cell @update-response="setResponse" 
+                  v-for="(item, y) in row" 
+                  :key="item.id" 
+                  :session-uuid="sessionUuid" 
+                  :item="item" 
+                  :x="x" 
+                  :y="y"/>
+          </div>
+        </div>
+        <div class="right-side">          
+          <label class="header">List of games</label>
+          <div v-for="game in games" :key="game.id">
+            <game class="game" 
+              @update-game-uuid="setGameUuid" 
+              @update-response="setResponse"
+              :session-uuid="sessionUuid" 
+              :game-uuid="game.uuid"
+              :active-game-uuid="gameUuid"
+              :player1-username="game.player1Username" 
+              :player2-username="game.player2Username"></game>
+          </div>
+          <div class="horizontal">
+            <button class="button" @click="createNewGame">Create New Game</button>
+            <button class="button" @click="getGames">Get Games</button>
+          </div>
+        </div>
+      </div>      
+      <label>{{ response }}
+      </label>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
