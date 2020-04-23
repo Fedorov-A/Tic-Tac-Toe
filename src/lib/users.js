@@ -58,15 +58,10 @@ function logIn(username, password) {
     });
   }
 
-  return { status: 200, message: sessionUuid };
+  return { status: 200, cookie: sessionUuid, message: 'Login successfull.' };
 }
 
-function createNewGame(sessionUuid) {
-  const session = sessions.find((el) => el.uuid === sessionUuid);
-  if (!session) {
-    return { status: 400, message: 'Unknown session.' };
-  }
-
+function createNewGame() {
   const game = new Game();
 
   games.push(game);
@@ -150,24 +145,8 @@ function makeStep(sessionUuid, x, y) {
   return { status: 200, message: game.makeStep(x, y) };
 }
 
-// #region Middlewares
-
-function authentication(req, res, next) {
-  req.userCredentials = sessions.find((el) => el.uuid === req.headers.authorization);
-  next();
-}
-
-function authorization(req, res, next) {
-  if (req.userCredentials) {
-    next();
-  } else {
-    res.sendStatus(401);
-  }
-}
-
-// #endregion
-
 module.exports = {
+  sessions,
   signIn,
   logIn,
   createNewGame,
@@ -176,6 +155,4 @@ module.exports = {
   getGameStatus,
   getActiveGameStatus,
   makeStep,
-  authentication,
-  authorization,
 };

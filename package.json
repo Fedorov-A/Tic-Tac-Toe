@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Fedorov-A/Tic-Tac-Toe#readme",
   "dependencies": {
-    "cookie-parser": "^1.4.5",
+    "cookie": "^0.4.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "socket.io": "^2.3.0",
@@ -31,6 +31,7 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.1",
     "nodemon": "^2.0.2",
+    "set-cookie-parser": "^2.4.5",
     "supertest": "^4.0.2"
   }
 }

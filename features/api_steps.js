@@ -1,6 +1,7 @@
 const { When, Then } = require('cucumber');
 const assert = require('assert');
 const request = require('supertest');
+const setCookie = require('set-cookie-parser');
 
 const app = require('../src/server');
 
@@ -13,42 +14,60 @@ let actualWinner;
 When('user tries to sign in with followed username {string} and password {string}', (username, password) => request(app)
   .post('/signIn')
   .send({ username, password })
-  .then((res) => { actualResponse = res.status; }));
+  .then((res) => {
+    actualResponse = res.status;
+  }));
 
 When('user tries to log in with followed username {string} and password {string}', (username, password) => request(app)
   .post('/logIn')
   .send({ username, password })
-  .then((res) => { actualResponse = res.status; sessionUuid = res.text; }));
+  .then((res) => {
+    actualResponse = res.status;
+    sessionUuid = setCookie(res, { map: true }).Session.value;
+  }));
 
 When('user tries to create a new game', () => request(app)
   .get('/createNewGame')
-  .set('Authorization', sessionUuid)
+  .set('Cookie', [`Session=${sessionUuid};`])
   .send()
-  .then((res) => { actualResponse = res.status; gameUuid = res.text; }));
+  .then((res) => {
+    actualResponse = res.status;
+    gameUuid = res.text;
+  }));
 
 When('user tries to get a list of games', () => request(app)
   .get('/getGames')
-  .set('Authorization', sessionUuid)
+  .set('Cookie', [`Session=${sessionUuid};`])
   .send()
-  .then((res) => { actualResponse = res.status; }));
+  .then((res) => {
+    actualResponse = res.status;
+  }));
 
 When('user tries to connect to that new game', () => request(app)
   .post('/connectToGame')
-  .set('Authorization', sessionUuid)
+  .set('Cookie', [`Session=${sessionUuid};`])
   .send({ gameUuid })
-  .then((res) => { actualResponse = res.status; }));
+  .then((res) => {
+    actualResponse = res.status;
+  }));
 
 When('user tries to get game status', () => request(app)
   .post('/getGameStatus')
-  .set('Authorization', sessionUuid)
+  .set('Cookie', [`Session=${sessionUuid};`])
   .send({ gameUuid })
-  .then((res) => { actualResponse = res.status; actualGameStatus = res.body; }));
+  .then((res) => {
+    actualResponse = res.status;
+    actualGameStatus = res.body;
+  }));
 
 When('user tries to make a step [{int}, {int}]', (x, y) => request(app)
   .post('/makeStep')
-  .set('Authorization', sessionUuid)
+  .set('Cookie', [`Session=${sessionUuid};`])
   .send({ x, y })
-  .then((res) => { actualResponse = res.status; actualWinner = res.text; }));
+  .then((res) => {
+    actualResponse = res.status;
+    actualWinner = res.text;
+  }));
 
 Then('user gets response {int}', (expectedResponse) => {
   assert.equal(actualResponse, expectedResponse);
