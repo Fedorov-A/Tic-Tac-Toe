@@ -16,8 +16,30 @@ app.use(router);
 
 io.on('connection', (socket) => {
   logger.log('a user connected');
-  socket.on('user-logged-in', (sessionId) => logger.log(`user logged in (sessionId: ${sessionId})`));
-  socket.on('disconnect', () => { logger.log('user disconnected'); });
+
+  socket.on('disconnect', () => {
+    logger.log('user disconnected');
+  });
+
+  socket.on('user-logged-in', () => {
+    socket.emit('games-list-updated');
+  });
+
+  socket.on('create-new-game', () => {
+    socket.emit('games-list-updated');
+    socket.broadcast.emit('games-list-updated');
+  });
+
+  socket.on('connect-to-game', () => {
+    socket.emit('get-game-status');
+    socket.emit('games-list-updated');
+    socket.broadcast.emit('games-list-updated');
+  });
+
+  socket.on('make-step', () => {
+    socket.emit('get-game-status');
+    socket.broadcast.emit('get-game-status');
+  });
 });
 
 module.exports = http;

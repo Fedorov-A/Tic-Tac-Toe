@@ -1,22 +1,20 @@
+/* eslint-disable */
+
 const socket = io('http://localhost:2000');
 
 Vue.component('cell', {
   props: [
-    'sessionUuid',
     'item',
     'x',
     'y',
   ],
 
   methods: {
-    makeStep(x, y, sessionUuid) {
-      axios.post('http://localhost:2000/makeStep', { x, y }, {
-        headers: {
-          authorization: sessionUuid,
-        },
-      })
+    makeStep(x, y) {
+      axios.post('http://localhost:2000/makeStep', { x, y })
         .then((response) => {
           this.$emit('update-response', response.data);
+          socket.emit('make-step');
         })
         .catch((err) => {
           this.$emit('update-response', err.response.data);
@@ -25,7 +23,7 @@ Vue.component('cell', {
   },
 
   template: `
-  <div class="cell" @click="makeStep(x, y, sessionUuid)">
+  <div class="cell" @click="makeStep(x, y)">
     <div v-if="item == 1">x</div>
     <div v-if="item == 2">o</div>
   </div>
@@ -51,8 +49,7 @@ Vue.component('auth', {
       axios.post('http://localhost:2000/logIn', { username, password })
         .then((response) => {
           this.$emit('update-response', `Hello, ${username}!`);
-          this.$emit('update-session-uuid', response.data);
-          socket.emit('user-logged-in', response.data);
+          socket.emit('user-logged-in');
         })
         .catch((err) => {
           this.$emit('update-response', err.response.data);
@@ -81,7 +78,6 @@ Vue.component('game', {
   props: {
     gameUuid: String,
     activeGameUuid: String,
-    sessionUuid: String,
     player1Username: String,
     player2Username: String,
   },
@@ -102,14 +98,11 @@ Vue.component('game', {
   },
   methods: {
     connectToGame(gameUuid) {
-      axios.post('http://localhost:2000/connectToGame', { gameUuid }, {
-        headers: {
-          authorization: this.sessionUuid,
-        },
-      })
+      axios.post('http://localhost:2000/connectToGame', { gameUuid })
         .then((response) => {
           this.$emit('update-game-uuid', gameUuid);
           this.$emit('update-response', response.data);
+          socket.emit('connect-to-game');
         })
         .catch((err) => {
           this.$emit('update-response', err.response.data);
@@ -131,7 +124,6 @@ const app = new Vue({
     field: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
     username: String,
     password: String,
-    sessionUuid: String,
     games: Array,
     gameUuid: '',
     response: '',
@@ -144,38 +136,18 @@ const app = new Vue({
     setPassword(value) {
       this.password = value;
     },
-    setSessionUuid(value) {
-      this.sessionUuid = value;
-    },
     setResponse(value) {
       this.response = value;
     },
     setGameUuid(value) {
       this.gameUuid = value;
     },
-    createNewGame() {
+    createNewGame() {      
       axios
-        .get('http://localhost:2000/createNewGame', {
-          headers: {
-            authorization: this.sessionUuid,
-          },
-        })
+        .get('http://localhost:2000/createNewGame')
         .then((response) => {
           this.response = 'Game successfully created!';
-        })
-        .catch((err) => {
-          this.response = err.response.data;
-        });
-    },
-    getGames() {
-      axios
-        .get('http://localhost:2000/getGames', {
-          headers: {
-            authorization: this.sessionUuid,
-          },
-        })
-        .then((response) => {
-          this.games = response.data;
+          socket.emit('create-new-game');
         })
         .catch((err) => {
           this.response = err.response.data;
@@ -184,19 +156,25 @@ const app = new Vue({
   },
 
   mounted() {
-    setInterval(() => {
+    socket.on('games-list-updated', () => {
       axios
-        .post('http://localhost:2000/getGameStatus', { gameUuid: this.gameUuid }, {
-          headers: {
-            authorization: this.sessionUuid,
-          },
-        })
+        .get('http://localhost:2000/getGames')
         .then((response) => {
-          this.field = response.data;
+          this.games = response.data;
         })
         .catch((err) => {
-        //
+          this.response = err.response.data;
         });
-    }, 1000);
+    });
+    
+    socket.on('get-game-status', () => {
+      axios.post('http://localhost:2000/getGameStatus', { gameUuid: this.gameUuid })
+      .then((response) => {
+        this.field = response.data;
+      })
+      .catch((err) => {
+      //
+      });
+    });
   },
 });

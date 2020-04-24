@@ -17,7 +17,7 @@
           <auth  
             @update-username="setUsername" :username="username"
             @update-password="setPassword" :password="password" 
-            @update-session-uuid="setSessionUuid" @update-response="setResponse"></auth>  
+            @update-response="setResponse"></auth>  
         </div>
         <div class="center">
           <label class="header">Active game</label>
@@ -25,7 +25,6 @@
             <cell @update-response="setResponse" 
                   v-for="(item, y) in row" 
                   :key="item.id" 
-                  :session-uuid="sessionUuid" 
                   :item="item" 
                   :x="x" 
                   :y="y"/>
@@ -37,7 +36,6 @@
             <game class="game" 
               @update-game-uuid="setGameUuid" 
               @update-response="setResponse"
-              :session-uuid="sessionUuid" 
               :game-uuid="game.uuid"
               :active-game-uuid="gameUuid"
               :player1-username="game.player1Username" 
@@ -45,7 +43,7 @@
           </div>
           <div class="horizontal">
             <button class="button" @click="createNewGame">Create New Game</button>
-            <button class="button" @click="getGames">Get Games</button>
+            <!--<button class="button" @click="getGames">Get Games</button>-->
           </div>
         </div>
       </div>      
