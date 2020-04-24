@@ -1,6 +1,6 @@
 /* eslint-disable */
-
-const socket = io('http://localhost:2000');
+const address = 'https://localhost:2000';
+const socket = io(address);
 
 Vue.component('cell', {
   props: [
@@ -11,7 +11,7 @@ Vue.component('cell', {
 
   methods: {
     makeStep(x, y) {
-      axios.post('http://localhost:2000/makeStep', { x, y })
+      axios.post(`${address}/makeStep`, { x, y })
         .then((response) => {
           this.$emit('update-response', response.data);
           socket.emit('make-step');
@@ -37,7 +37,7 @@ Vue.component('auth', {
   },
   methods: {
     signIn(username, password) {
-      axios.post('http://localhost:2000/signIn', { username, password })
+      axios.post(`${address}/signIn`, { username, password })
         .then((response) => {
           this.$emit('update-response', response.data);
         })
@@ -46,7 +46,7 @@ Vue.component('auth', {
         });
     },
     logIn(username, password) {
-      axios.post('http://localhost:2000/logIn', { username, password })
+      axios.post(`${address}/logIn`, { username, password })
         .then((response) => {
           this.$emit('update-response', `Hello, ${username}!`);
           socket.emit('user-logged-in');
@@ -64,7 +64,7 @@ Vue.component('auth', {
     </div>
     <div class="horizontal">
     <label>Password:</label>
-      <input placeholder="Password" @input="$emit('update-password', $event.target.value)"">
+      <input placeholder="Password" @input="$emit('update-password', $event.target.value)" type="password">
     </div>
     <div class="horizontal">
       <button class="button" @click="signIn(username, password)">Sign In</button>
@@ -98,7 +98,7 @@ Vue.component('game', {
   },
   methods: {
     connectToGame(gameUuid) {
-      axios.post('http://localhost:2000/connectToGame', { gameUuid })
+      axios.post(`${address}/connectToGame`, { gameUuid })
         .then((response) => {
           this.$emit('update-game-uuid', gameUuid);
           this.$emit('update-response', response.data);
@@ -144,7 +144,7 @@ const app = new Vue({
     },
     createNewGame() {      
       axios
-        .get('http://localhost:2000/createNewGame')
+        .get(`${address}/createNewGame`)
         .then((response) => {
           this.response = 'Game successfully created!';
           socket.emit('create-new-game');
@@ -158,7 +158,7 @@ const app = new Vue({
   mounted() {
     socket.on('games-list-updated', () => {
       axios
-        .get('http://localhost:2000/getGames')
+        .get(`${address}/getGames`)
         .then((response) => {
           this.games = response.data;
         })
@@ -168,7 +168,7 @@ const app = new Vue({
     });
     
     socket.on('get-game-status', () => {
-      axios.post('http://localhost:2000/getGameStatus', { gameUuid: this.gameUuid })
+      axios.post(`${address}/getGameStatus`, { gameUuid: this.gameUuid })
       .then((response) => {
         this.field = response.data;
       })

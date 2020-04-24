@@ -1,9 +1,14 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const https = require('https').createServer({
+  key: fs.readFileSync(`${__dirname}/ssl/privatekey.pem`),
+  cert: fs.readFileSync(`${__dirname}/ssl/certificate.pem`),
+},
+app);
+const io = require('socket.io')(https);
 
 const { router, authentication } = require('./middlewares');
 const logger = require('./lib/logger');
@@ -42,4 +47,4 @@ io.on('connection', (socket) => {
   });
 });
 
-module.exports = http;
+module.exports = https;
