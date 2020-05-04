@@ -1,5 +1,5 @@
 const uuid = require('uuid');
-const Game = require('../game');
+const Game = require('./game');
 
 const sessions = [];
 

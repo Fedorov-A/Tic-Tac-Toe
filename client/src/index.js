@@ -1,5 +1,5 @@
 /* eslint-disable */
-const address = 'https://localhost:2000';
+const address = 'http://localhost:2000';
 const socket = io(address);
 
 Vue.component('cell', {
@@ -97,7 +97,7 @@ Vue.component('game', {
     },
   },
   methods: {
-    connectToGame(gameUuid) {
+    connectToGame(gameUuid) { 
       axios.post(`${address}/connectToGame`, { gameUuid })
         .then((response) => {
           this.$emit('update-game-uuid', gameUuid);

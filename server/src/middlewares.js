@@ -1,6 +1,7 @@
 const cookie = require('cookie');
 const router = require('express').Router();
-const users = require('./lib/users');
+const path = require('path');
+const users = require('./users');
 
 function authentication(req, res, next) {
   if (req.headers.cookie) {
@@ -19,7 +20,7 @@ function authorization(req, res, next) {
 }
 
 router.get('/', (req, res) => {
-  res.status(200).sendFile(`${__dirname}/client/index.html`);
+  res.status(200).sendFile(path.resolve('./client/src/index.html'));
 });
 
 router.post('/signIn', (req, res) => {

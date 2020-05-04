@@ -1,31 +1,20 @@
-const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
+const express = require('express');
+const path = require('path');
 
 const app = express();
-const https = require('https').createServer({
-  key: fs.readFileSync(`${__dirname}/ssl/privatekey.pem`),
-  cert: fs.readFileSync(`${__dirname}/ssl/certificate.pem`),
-},
-app);
-const io = require('socket.io')(https);
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 const { router, authentication } = require('./middlewares');
-const logger = require('./lib/logger');
 
-app.use(express.static(`${__dirname}/client`));
+app.use(express.static(path.resolve('./client/src')));
 app.use(express.json());
 app.use(cors());
 app.use(authentication);
 app.use(router);
 
 io.on('connection', (socket) => {
-  logger.log('a user connected');
-
-  socket.on('disconnect', () => {
-    logger.log('user disconnected');
-  });
-
   socket.on('user-logged-in', () => {
     socket.emit('games-list-updated');
   });
@@ -47,4 +36,4 @@ io.on('connection', (socket) => {
   });
 });
 
-module.exports = https;
+module.exports = http;

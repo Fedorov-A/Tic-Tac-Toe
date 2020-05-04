@@ -4,9 +4,9 @@
   "description": "Backend for Tic-Tac-Toe",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js",
-    "start": "node src/index.js",
-    "start-dev": "nodemon src/index.js"
+    "test": "cucumber-js server/features",
+    "start": "node server/public/index.js",
+    "start-dev": "nodemon server/public/index.js"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,8 @@
     "cucumber": "^6.0.5",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
     "nodemon": "^2.0.2",
     "set-cookie-parser": "^2.4.5",
     "supertest": "^4.0.2"
